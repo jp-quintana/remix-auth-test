@@ -14,10 +14,9 @@ export const authenticator = new Authenticator<User>(sessionStorage);
 
 authenticator.use(
   new FormStrategy(async ({ form }) => {
-    const email = form.get('email')!;
-    const password = form.get('password')!;
+    const email = form.get('email') as string;
+    const password = form.get('password') as string;
 
-    console.log(email, password);
     const user = await login(email, password);
 
     return user;

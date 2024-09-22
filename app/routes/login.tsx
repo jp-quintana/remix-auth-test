@@ -1,4 +1,6 @@
+import { ActionFunctionArgs } from '@remix-run/node';
 import { Form } from '@remix-run/react';
+import { authenticator } from '~/services/auth.server';
 
 const Login = () => {
   return (
@@ -18,3 +20,10 @@ const Login = () => {
 };
 
 export default Login;
+
+export async function action({ request }: ActionFunctionArgs) {
+  return await authenticator.authenticate('user-pass', request, {
+    successRedirect: '/',
+    failureRedirect: '/login',
+  });
+}
