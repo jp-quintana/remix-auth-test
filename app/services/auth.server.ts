@@ -10,7 +10,9 @@ export interface User {
   password: string;
 }
 
-export const authenticator = new Authenticator<User>(sessionStorage);
+export const authenticator = new Authenticator<User>(sessionStorage, {
+  sessionErrorKey: 'session-error',
+});
 
 authenticator.use(
   new FormStrategy(async ({ form }) => {
