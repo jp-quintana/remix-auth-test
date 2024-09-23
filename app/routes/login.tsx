@@ -1,9 +1,11 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { Form } from '@remix-run/react';
+import { ActionFunctionArgs } from '@remix-run/node';
+import { Form, useActionData } from '@remix-run/react';
 import { authenticator } from '~/services/auth.server';
-import { getSession } from '~/services/session.server';
 
 const Login = () => {
+  const data = useActionData<typeof action>();
+
+  console.log(data);
   return (
     <div>
       <Form method="post">
@@ -22,12 +24,6 @@ const Login = () => {
 
 export default Login;
 
-// export async function loader({ request }: LoaderFunctionArgs) {
-//   let session = await getSession(request.headers.get('cookie'));
-//   let error = session.get(authenticator.sessionErrorKey);
-//   return json({ error });
-// }
-
 export async function action({ request }: ActionFunctionArgs) {
   try {
     return await authenticator.authenticate('user-pass', request, {
@@ -35,6 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
       throwOnError: true,
     });
   } catch (error: unknown) {
-    return error;
+    const { message } = error;
+    return { error: message || 'Something went wrong' };
   }
 }
