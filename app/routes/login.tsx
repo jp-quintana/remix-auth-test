@@ -30,7 +30,7 @@ export async function action({ request }: ActionFunctionArgs) {
       successRedirect: '/',
       throwOnError: true,
     });
-  } catch (error: unknown) {
+  } catch (error: any) {
     const { message } = error;
     return { error: message || 'Something went wrong' };
   }
