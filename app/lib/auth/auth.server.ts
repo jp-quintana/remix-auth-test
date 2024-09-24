@@ -19,7 +19,6 @@ authenticator.use(
     const password = form.get('password') as string;
 
     const user = await login(email, password);
-
     return user;
   }),
   'user-pass'

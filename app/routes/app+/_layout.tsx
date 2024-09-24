@@ -4,15 +4,14 @@ import { checkUserSession } from '~/utils/auth';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const sessionExists = await checkUserSession(request);
-
-  if (sessionExists) {
-    return redirect('/app');
+  if (!sessionExists) {
+    return redirect('/login');
   }
   return null;
 }
 
-const PublicLayout = () => {
+const AppLayout = () => {
   return <Outlet />;
 };
 
-export default PublicLayout;
+export default AppLayout;
