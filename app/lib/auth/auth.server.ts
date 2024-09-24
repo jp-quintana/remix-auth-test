@@ -1,18 +1,17 @@
 import { Authenticator } from 'remix-auth';
-import { sessionStorage } from '~/services/session.server';
+import { sessionStorage } from '~/lib/auth/session.server';
 import { FormStrategy } from 'remix-auth-form';
-import { login } from './auth/auth.service';
+import { login } from '~/services/auth/auth.service';
 
 export interface User {
   name: string;
   lastName: string;
   email: string;
   password: string;
+  accessToken: string;
 }
 
-export const authenticator = new Authenticator<User>(sessionStorage, {
-  sessionErrorKey: 'session-error',
-});
+export const authenticator = new Authenticator<User>(sessionStorage);
 
 authenticator.use(
   new FormStrategy(async ({ form }) => {
