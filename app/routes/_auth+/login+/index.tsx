@@ -4,8 +4,6 @@ import { authenticator } from '~/services/auth.server';
 
 const Login = () => {
   const data = useActionData<typeof action>();
-
-  console.log(data);
   return (
     <div>
       <Form method="post">
@@ -17,6 +15,7 @@ const Login = () => {
           required
         />
         <button>Sign In</button>
+        {data?.error && <p>{data.error}</p>}
       </Form>
     </div>
   );
