@@ -1,5 +1,6 @@
 [
   {
+    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     "name": "User 1",
     "lastName": "User 1",
     "email": "user1@gmail.com",
@@ -7,9 +8,42 @@
     "accessToken": "123"
   },
   {
+    "id": "b6b5e9a1-6c90-4f1e-b23b-f99cb64d1f75",
     "name": "User 2",
     "lastName": "User 2",
     "email": "user2@gmail.com",
+    "password": "P@ssword123",
+    "accessToken": "123"
+  },
+  {
+    "id": "2cf450d1-e316-4de6-8767-e899a89fe381",
+    "name": "User 3",
+    "lastName": "User 3",
+    "email": "user3@gmail.com",
+    "password": "P@ssword123",
+    "accessToken": "123"
+  },
+  {
+    "id": "9bfdc24e-0290-4115-a560-150b5630aaa1",
+    "name": "User 4",
+    "lastName": "User 4",
+    "email": "user4@gmail.com",
+    "password": "P@ssword123",
+    "accessToken": "123"
+  },
+  {
+    "id": "d4ded3ca-d859-40f1-a44a-6342ffbbd27b",
+    "name": "user5",
+    "lastName": "user5",
+    "email": "user5@gmail.com",
+    "password": "P@ssword123",
+    "accessToken": "123"
+  },
+  {
+    "id": "34034ed8-05ed-4c2e-87e5-245cb68ba782",
+    "name": "user6",
+    "lastName": "user6",
+    "email": "user6@gmail.com",
     "password": "P@ssword123",
     "accessToken": "123"
   }

@@ -1,15 +1,44 @@
 import { AuthorizationError } from 'remix-auth';
 import { User } from '../../lib/auth/auth.server';
 
-import DUMMY_USERS from '~/data/users.json';
+export const login = async (email: string, password: string): Promise<User> => {
+  try {
+    const response = await fetch(process.env.API_URL! + 'auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-export const login = async (email: string, password: string): User => {
-  const user = DUMMY_USERS.find((user) => user.email === email);
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
 
-  if (!user) throw new AuthorizationError('User does not exist');
+    return data;
+  } catch (error: any) {
+    throw new AuthorizationError(error.message);
+  }
+};
 
-  if (user.password !== password)
-    throw new AuthorizationError('Email or password is incorrect');
+export const signup = async (
+  userDetails: Omit<User, 'accessToken'>
+): Promise<void> => {
+  try {
+    const response = await fetch(process.env.API_URL! + 'auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userDetails),
+    });
 
-  return user;
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+  } catch (error: any) {
+    throw new AuthorizationError(error.message);
+  }
 };

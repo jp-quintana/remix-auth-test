@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { promises as fs } from 'fs';
+import { v4 as uuid } from 'uuid';
 
 const filePath = './src/data/users.json';
 
@@ -12,12 +13,12 @@ export class AuthController {
 
       const user = users.find((user: any) => user.email === email);
 
-      if (!user) res.status(404).json({ message: 'User not found' });
+      if (!user) return res.status(404).json({ message: 'User not found' });
 
       if (user.password !== password)
-        res.status(401).json({ message: 'Unauthorized' });
+        return res.status(401).json({ message: 'Unauthorized' });
 
-      return res.json(user);
+      return res.status(201).json(user);
     } catch (error: any) {
       console.error({ error });
       return res.status(500).json({ message: 'Internal server error' });
@@ -36,11 +37,14 @@ export class AuthController {
         return res.status(409).json({ message: 'User already exists' });
       }
 
-      const updatedUsers = [...users, req.body];
+      const updatedUsers = [
+        ...users,
+        { id: uuid(), ...req.body, accessToken: '123' },
+      ];
 
       await fs.writeFile(filePath, JSON.stringify(updatedUsers, null, 2));
 
-      return res.status(201).json({ message: 'User registered successfully' });
+      return res.status(201).json({ message: 'User created successfully' });
     } catch (error: any) {
       console.error({ error });
       return res.status(500).json({ message: 'Internal server error' });

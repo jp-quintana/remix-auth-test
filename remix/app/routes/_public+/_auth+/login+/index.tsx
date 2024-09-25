@@ -23,13 +23,17 @@ export async function action({ request }: ActionFunctionArgs) {
 const Login = () => {
   const data = useActionData<typeof action>();
   return (
-    <div>
-      <RemixForm method="post">
-        <input type="email" name="email" required />
+    <div className="flex flex-col gap-y-3">
+      <p className="font-bold text-lg">Login</p>
+      <RemixForm method="post" className="flex flex-col justify-center">
+        <label htmlFor="email">Email:</label>
+        <input type="email" name="email" className="border" required />
+        <label htmlFor="password">Password:</label>
         <input
           type="password"
           name="password"
           autoComplete="current-password"
+          className="border"
           required
         />
         <button>Sign In</button>

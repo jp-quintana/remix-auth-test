@@ -1,9 +1,0 @@
-[
-  {
-    "name": "User",
-    "lastName": "User",
-    "email": "user@gmail.com",
-    "password": "P@ssword123",
-    "accessToken": "123"
-  }
-]
