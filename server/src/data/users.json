@@ -1,8 +1,15 @@
 [
   {
-    "name": "User",
-    "lastName": "User",
-    "email": "user@gmail.com",
+    "name": "User 1",
+    "lastName": "User 1",
+    "email": "user1@gmail.com",
+    "password": "P@ssword123",
+    "accessToken": "123"
+  },
+  {
+    "name": "User 2",
+    "lastName": "User 2",
+    "email": "user2@gmail.com",
     "password": "P@ssword123",
     "accessToken": "123"
   }
