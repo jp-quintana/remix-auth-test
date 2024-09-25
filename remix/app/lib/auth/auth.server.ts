@@ -4,11 +4,15 @@ import { FormStrategy } from 'remix-auth-form';
 import { login } from '~/services/auth/auth.service';
 
 export interface User {
-  name: string;
-  lastName: string;
-  email: string;
-  password: string;
   accessToken: string;
+  refreshToken: string;
+  user: {
+    name: string;
+    lastName: string;
+    email: string;
+    password: string;
+    role: string;
+  };
 }
 
 export const authenticator = new Authenticator<User>(sessionStorage);

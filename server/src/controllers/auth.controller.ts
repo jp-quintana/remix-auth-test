@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { promises as fs } from 'fs';
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const filePath = './src/data/users.json';
 
@@ -23,7 +24,32 @@ export class AuthController {
           .status(401)
           .json({ message: 'Email or password is incorrect' });
 
-      return res.status(201).json(user);
+      delete user.password;
+
+      const payload = {
+        user: { userId: user.id, email: user.email, role: user.role },
+      };
+
+      const accessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
+        expiresIn: '30s',
+      });
+
+      const refreshToken = jwt.sign(
+        { userId: user.id },
+        process.env.JWT_SECRET!,
+        {
+          expiresIn: '7d',
+        }
+      );
+
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
+      return res.status(201).json({ user, accessToken });
     } catch (error: any) {
       console.error({ error });
       return res.status(500).json({ message: 'Internal server error' });
@@ -45,15 +71,14 @@ export class AuthController {
       const salt = await bcrypt.genSalt(10);
       const encryptedPassword = await bcrypt.hash(password, salt);
 
-      const updatedUsers = [
-        ...users,
-        {
-          id: uuid(),
-          ...req.body,
-          password: encryptedPassword,
-          accessToken: '123',
-        },
-      ];
+      const newUser = {
+        id: uuid(),
+        ...req.body,
+        password: encryptedPassword,
+        role: 'user',
+      };
+
+      const updatedUsers = [...users, newUser];
 
       await fs.writeFile(filePath, JSON.stringify(updatedUsers, null, 2));
 

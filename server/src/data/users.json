@@ -5,6 +5,6 @@
     "lastName": "User",
     "email": "user@gmail.com",
     "password": "$2b$10$7dALQ.8rjx.AmuGNSgdTI.n1DYD98iOmE8yXQbSCGg4kUDxtiLtBy",
-    "accessToken": "123"
+    "role": "user"
   }
 ]
