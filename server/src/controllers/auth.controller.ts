@@ -34,6 +34,9 @@ export class AuthController {
         expiresIn: '30s',
       });
 
+      const decoded = jwt.decode(accessToken) as { exp: number };
+      const accessTokenExpirationDate = new Date(decoded.exp * 1000);
+
       const refreshToken = jwt.sign(
         { userId: user.id },
         process.env.JWT_SECRET!,
@@ -49,7 +52,11 @@ export class AuthController {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      return res.status(201).json({ user, accessToken });
+      return res.status(201).json({
+        user,
+        accessToken,
+        expirationDate: accessTokenExpirationDate.toISOString(),
+      });
     } catch (error: any) {
       console.error({ error });
       return res.status(500).json({ message: 'Internal server error' });
@@ -88,5 +95,6 @@ export class AuthController {
       return res.status(500).json({ message: 'Internal server error' });
     }
   }
+
   static async refresh(req: Request, res: Response, _next: NextFunction) {}
 }
