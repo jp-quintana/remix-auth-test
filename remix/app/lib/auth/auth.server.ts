@@ -6,6 +6,7 @@ import { login } from '~/services/auth/auth.service';
 export interface User {
   accessToken: string;
   refreshToken: string;
+  expirationDate: string;
   user: {
     name: string;
     lastName: string;

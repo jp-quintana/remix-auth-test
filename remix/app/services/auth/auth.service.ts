@@ -24,7 +24,7 @@ export const login = async (email: string, password: string): Promise<User> => {
     }
 
     let refreshToken = '';
-    const cookies = response.headers.get('set-cookie')!.split(';');
+    const cookies = response.headers.get('Set-Cookie')!.split(';');
 
     for (const cookie of cookies) {
       if (cookie.trim().startsWith('refreshToken=')) {
