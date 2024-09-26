@@ -19,7 +19,7 @@ export const authenticate = async (
   try {
     const user = session.get('user');
 
-    if (!user.accessToken) throw redirect('/login');
+    if (!user?.accessToken) throw redirect('/login');
 
     if (new Date(user.expirationDate) < new Date()) {
       throw new AuthorizationError('Expired');
