@@ -2,7 +2,7 @@ import { ActionFunctionArgs } from '@remix-run/node';
 import { Form as RemixForm, useActionData } from '@remix-run/react';
 import { AuthorizationError } from 'remix-auth';
 import { authenticator } from '~/lib/auth/auth.server';
-import { signup } from '~/services/auth/auth.service';
+import { signup } from '~/services/auth.service';
 
 export async function action({ request }: ActionFunctionArgs) {
   try {

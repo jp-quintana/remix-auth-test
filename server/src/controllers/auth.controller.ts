@@ -35,7 +35,6 @@ export class AuthController {
       });
 
       const decoded = jwt.decode(accessToken) as { exp: number };
-      const accessTokenExpirationDate = new Date(decoded.exp * 1000);
 
       const refreshToken = jwt.sign(
         { userId: user.id },
@@ -55,7 +54,7 @@ export class AuthController {
       return res.status(201).json({
         user,
         accessToken,
-        expirationDate: accessTokenExpirationDate.toISOString(),
+        expirationDate: new Date(decoded.exp * 1000).toISOString(),
       });
     } catch (error: any) {
       console.error({ error });
@@ -96,5 +95,65 @@ export class AuthController {
     }
   }
 
-  static async refresh(req: Request, res: Response, _next: NextFunction) {}
+  static async refresh(req: Request, res: Response, _next: NextFunction) {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: 'Refresh token not provided' });
+    }
+
+    try {
+      const decodedRefreshToken = jwt.verify(
+        refreshToken,
+        process.env.JWT_SECRET!
+      );
+
+      const { userId } = decodedRefreshToken as { userId: string };
+
+      const data = await fs.readFile(filePath, 'utf-8');
+      const users = JSON.parse(data);
+
+      const user = users.find((user: any) => user.id === userId);
+
+      if (!user) return res.status(404).json({ message: 'User not found' });
+
+      const payload = {
+        user: { userId: user.id, email: user.email, role: user.role },
+      };
+      const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
+        expiresIn: '10s',
+      });
+
+      const decodedNewAccessToken = jwt.decode(newAccessToken) as {
+        exp: number;
+      };
+
+      const newRefreshToken = jwt.sign(
+        { userId: user.id },
+        process.env.JWT_SECRET!,
+        {
+          expiresIn: '7d',
+        }
+      );
+
+      res.cookie('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
+      return res.status(201).json({
+        user,
+        accessToken: newAccessToken,
+        expirationDate: new Date(
+          decodedNewAccessToken.exp * 1000
+        ).toISOString(),
+      });
+    } catch (error: any) {
+      return res
+        .status(401)
+        .json({ message: error.message || 'Invalid or expired token' });
+    }
+  }
 }

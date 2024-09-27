@@ -12,8 +12,10 @@ export class AuthMiddleware {
           .json({ message: 'Authorization token missing or malformed' });
 
       const decoded = jwt.verify(accessToken, process.env.JWT_SECRET!);
-
-      req.user = decoded;
+      const { user } = decoded as {
+        user: { userId: string; email: string; role: string };
+      };
+      req.user = user;
 
       next();
     } catch (error: any) {
