@@ -7,8 +7,7 @@ export class UserController {
   static async getUser(req: Request, res: Response, _next: NextFunction) {
     try {
       const { userId } = req.user;
-      console.log(req.user.user);
-      console.log({ userId });
+
       const data = await fs.readFile(filePath, 'utf-8');
       const users = JSON.parse(data);
 

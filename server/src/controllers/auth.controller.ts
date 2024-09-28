@@ -31,7 +31,7 @@ export class AuthController {
       };
 
       const accessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
-        expiresIn: '30s',
+        expiresIn: '60m',
       });
 
       const decoded = jwt.decode(accessToken) as { exp: number };
@@ -40,7 +40,7 @@ export class AuthController {
         { userId: user.id },
         process.env.JWT_SECRET!,
         {
-          expiresIn: '7d',
+          expiresIn: '90d',
         }
       );
 
@@ -48,7 +48,7 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: 90 * 24 * 60 * 60 * 1000,
       });
 
       return res.status(201).json({
@@ -121,7 +121,7 @@ export class AuthController {
         user: { userId: user.id, email: user.email, role: user.role },
       };
       const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
-        expiresIn: '10s',
+        expiresIn: '60m',
       });
 
       const decodedNewAccessToken = jwt.decode(newAccessToken) as {
@@ -132,7 +132,7 @@ export class AuthController {
         { userId: user.id },
         process.env.JWT_SECRET!,
         {
-          expiresIn: '7d',
+          expiresIn: '90d',
         }
       );
 
@@ -140,7 +140,7 @@ export class AuthController {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: 90 * 24 * 60 * 60 * 1000,
       });
 
       return res.status(201).json({

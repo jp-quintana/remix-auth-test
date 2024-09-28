@@ -7,7 +7,6 @@ export const checkSessionExists = async (request: Request) => {
   const session = await getSession(request.headers.get('cookie'));
   const user = session.get('user');
   if (!user?.accessToken) return false;
-  // future external api check
   return true;
 };
 
@@ -32,9 +31,10 @@ export const authenticate = async (
         user?.refreshToken
       );
 
-      session.set('accessToken', accessToken);
-      session.set('refreshToken', refreshToken);
-      session.set('expirationDate', expirationDate);
+      user.accessToken = accessToken;
+      user.refreshToken = refreshToken;
+      user.expirationDate = expirationDate;
+      session.set('user', user);
 
       headers.append('Set-Cookie', await commitSession(session));
       if (request.method === 'GET') throw redirect(request.url, { headers });
