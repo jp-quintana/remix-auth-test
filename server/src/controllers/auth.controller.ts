@@ -3,7 +3,12 @@ import { promises as fs } from 'fs';
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { jwtSecret } from '../config';
+import {
+  accessTokenTtl,
+  cookieMaxAge,
+  jwtSecret,
+  refreshTokenTtl,
+} from '../config';
 
 const filePath = './src/data/users.json';
 
@@ -31,21 +36,21 @@ export class AuthController {
         user: { userId: user.id, email: user.email, role: user.role },
       };
 
-      const accessToken = jwt.sign(payload, jwtSecret!, {
-        expiresIn: '60m',
+      const accessToken = jwt.sign(payload, jwtSecret, {
+        expiresIn: accessTokenTtl,
       });
 
       const decoded = jwt.decode(accessToken) as { exp: number };
 
-      const refreshToken = jwt.sign({ userId: user.id }, jwtSecret!, {
-        expiresIn: '90d',
+      const refreshToken = jwt.sign({ userId: user.id }, jwtSecret, {
+        expiresIn: refreshTokenTtl,
       });
 
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 90 * 24 * 60 * 60 * 1000,
+        maxAge: cookieMaxAge,
       });
 
       return res.status(201).json({
@@ -100,7 +105,7 @@ export class AuthController {
     }
 
     try {
-      const decodedRefreshToken = jwt.verify(refreshToken, jwtSecret!);
+      const decodedRefreshToken = jwt.verify(refreshToken, jwtSecret);
 
       const { userId } = decodedRefreshToken as { userId: string };
 
@@ -114,23 +119,23 @@ export class AuthController {
       const payload = {
         user: { userId: user.id, email: user.email, role: user.role },
       };
-      const newAccessToken = jwt.sign(payload, jwtSecret!, {
-        expiresIn: '60m',
+      const newAccessToken = jwt.sign(payload, jwtSecret, {
+        expiresIn: accessTokenTtl,
       });
 
       const decodedNewAccessToken = jwt.decode(newAccessToken) as {
         exp: number;
       };
 
-      const newRefreshToken = jwt.sign({ userId: user.id }, jwtSecret!, {
-        expiresIn: '90d',
+      const newRefreshToken = jwt.sign({ userId: user.id }, jwtSecret, {
+        expiresIn: refreshTokenTtl,
       });
 
       res.cookie('refreshToken', newRefreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 90 * 24 * 60 * 60 * 1000,
+        maxAge: cookieMaxAge,
       });
 
       return res.status(201).json({
