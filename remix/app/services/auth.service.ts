@@ -1,5 +1,5 @@
 import { AuthorizationError } from 'remix-auth';
-import { User } from '../../lib/auth/auth.server';
+import { User } from '~/lib/auth/auth.server';
 
 interface CreateUserDetails {
   name: string;
@@ -89,7 +89,13 @@ export const refreshTokens = async (
 
   const data = await response.json();
 
+  if (!response.ok) {
+    throw new Error(data.message);
+  }
+
   const payload = { ...data };
+
+  console.log({ payload });
 
   // TODO: check future
   if (typeof window === 'undefined') {

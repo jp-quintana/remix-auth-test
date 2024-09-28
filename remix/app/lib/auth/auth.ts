@@ -2,6 +2,7 @@ import { redirect, Session } from '@remix-run/node';
 import { commitSession, getSession } from './session.server';
 import { AuthorizationError } from 'remix-auth';
 import { refreshTokens } from '~/services/auth.service';
+import { authenticator } from './auth.server';
 
 export const checkSessionExists = async (request: Request) => {
   const session = await getSession(request.headers.get('cookie'));
@@ -26,20 +27,24 @@ export const authenticate = async (
 
     return user.accessToken;
   } catch (error: any) {
-    if (error instanceof AuthorizationError) {
-      const { accessToken, refreshToken, expirationDate } = await refreshTokens(
-        user?.refreshToken
-      );
+    try {
+      console.log({ refreshToken: user?.refreshToken });
+      if (error instanceof AuthorizationError) {
+        const { accessToken, refreshToken, expirationDate } =
+          await refreshTokens(user?.refreshToken);
 
-      user.accessToken = accessToken;
-      user.refreshToken = refreshToken;
-      user.expirationDate = expirationDate;
-      session.set('user', user);
+        user.accessToken = accessToken;
+        user.refreshToken = refreshToken;
+        user.expirationDate = expirationDate;
+        session.set('user', user);
 
-      headers.append('Set-Cookie', await commitSession(session));
-      if (request.method === 'GET') throw redirect(request.url, { headers });
-      return accessToken;
+        headers.append('Set-Cookie', await commitSession(session));
+        if (request.method === 'GET') throw redirect(request.url, { headers });
+        return accessToken;
+      }
+    } catch (error: any) {
+      if (error instanceof Response) throw error;
+      await authenticator.logout(request, { redirectTo: '/login' });
     }
-    throw error;
   }
 };
