@@ -28,7 +28,6 @@ export const authenticate = async (
     return user.accessToken;
   } catch (error: any) {
     try {
-      console.log({ refreshToken: user?.refreshToken });
       if (error instanceof AuthorizationError) {
         const { accessToken, refreshToken, expirationDate } =
           await refreshTokens(user?.refreshToken);
@@ -42,6 +41,8 @@ export const authenticate = async (
         if (request.method === 'GET') throw redirect(request.url, { headers });
         return accessToken;
       }
+
+      throw error;
     } catch (error: any) {
       if (error instanceof Response) throw error;
       await authenticator.logout(request, { redirectTo: '/login' });
