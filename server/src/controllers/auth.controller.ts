@@ -3,6 +3,7 @@ import { promises as fs } from 'fs';
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { jwtSecret } from '../config';
 
 const filePath = './src/data/users.json';
 
@@ -30,19 +31,15 @@ export class AuthController {
         user: { userId: user.id, email: user.email, role: user.role },
       };
 
-      const accessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
+      const accessToken = jwt.sign(payload, jwtSecret!, {
         expiresIn: '60m',
       });
 
       const decoded = jwt.decode(accessToken) as { exp: number };
 
-      const refreshToken = jwt.sign(
-        { userId: user.id },
-        process.env.JWT_SECRET!,
-        {
-          expiresIn: '90d',
-        }
-      );
+      const refreshToken = jwt.sign({ userId: user.id }, jwtSecret!, {
+        expiresIn: '90d',
+      });
 
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
@@ -103,10 +100,7 @@ export class AuthController {
     }
 
     try {
-      const decodedRefreshToken = jwt.verify(
-        refreshToken,
-        process.env.JWT_SECRET!
-      );
+      const decodedRefreshToken = jwt.verify(refreshToken, jwtSecret!);
 
       const { userId } = decodedRefreshToken as { userId: string };
 
@@ -120,7 +114,7 @@ export class AuthController {
       const payload = {
         user: { userId: user.id, email: user.email, role: user.role },
       };
-      const newAccessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
+      const newAccessToken = jwt.sign(payload, jwtSecret!, {
         expiresIn: '60m',
       });
 
@@ -128,13 +122,9 @@ export class AuthController {
         exp: number;
       };
 
-      const newRefreshToken = jwt.sign(
-        { userId: user.id },
-        process.env.JWT_SECRET!,
-        {
-          expiresIn: '90d',
-        }
-      );
+      const newRefreshToken = jwt.sign({ userId: user.id }, jwtSecret!, {
+        expiresIn: '90d',
+      });
 
       res.cookie('refreshToken', newRefreshToken, {
         httpOnly: true,

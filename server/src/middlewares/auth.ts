@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { jwtSecret } from '../config';
 
 export class AuthMiddleware {
   static verifyToken(req: Request, res: Response, next: NextFunction) {
@@ -11,7 +12,7 @@ export class AuthMiddleware {
           .status(401)
           .json({ message: 'Authorization token missing or malformed' });
 
-      const decoded = jwt.verify(accessToken, process.env.JWT_SECRET!);
+      const decoded = jwt.verify(accessToken, jwtSecret!);
       const { user } = decoded as {
         user: { userId: string; email: string; role: string };
       };
