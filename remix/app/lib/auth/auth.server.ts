@@ -37,12 +37,12 @@ authenticator.use(
 //     { id_token: string }
 //   >(
 //     {
-//       clientId: CLIENT_ID,
-//       clientSecret: CLIENT_SECRET,
+//       clientId: process.env.GOOGLE_CLIENT_ID,
+//       clientSecret: process.env.GOOGLE_SECRET,
 
 //       authorizationEndpoint: "https://provider.com/oauth2/authorize",
 //       tokenEndpoint: "https://provider.com/oauth2/token",
-//       redirectURI: "https://example.app/auth/callback",
+//       redirectURI: process.env.GOOGLE_OAUTH_REDIRECT_URL,
 
 //       tokenRevocationEndpoint: "https://provider.com/oauth2/revoke", // optional
 
