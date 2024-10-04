@@ -31,31 +31,27 @@ authenticator.use(
 );
 
 // authenticator.use(
-//   new OAuth2Strategy<
-//     User,
-//     { providers: "provider-name" },
-//     { id_token: string }
-//   >(
+//   new OAuth2Strategy<User, { provider: 'provider-name' }, { id_token: string }>(
 //     {
-//       clientId: process.env.GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.GOOGLE_SECRET,
+//       clientId: process.env.GOOGLE_CLIENT_ID as string,
+//       clientSecret: process.env.GOOGLE_SECRET as string,
 
-//       authorizationEndpoint: "https://provider.com/oauth2/authorize",
-//       tokenEndpoint: "https://provider.com/oauth2/token",
-//       redirectURI: process.env.GOOGLE_OAUTH_REDIRECT_URL,
+//       authorizationEndpoint: 'https://provider.com/oauth2/authorize',
+//       tokenEndpoint: 'https://provider.com/oauth2/token',
+//       redirectURI: process.env.GOOGLE_OAUTH_REDIRECT_URL as string,
 
-//       tokenRevocationEndpoint: "https://provider.com/oauth2/revoke", // optional
+//       // tokenRevocationEndpoint: "https://provider.com/oauth2/revoke", // optional
 
-//       codeChallengeMethod: "S256", // optional
-//       scopes: ["openid", "email", "profile"], // optional
+//       // codeChallengeMethod: "S256", // optional
+//       scopes: ['openid', 'email', 'profile'],
 
-//       authenticateWith: "request_body", // optional
+//       authenticateWith: 'request_body', // optional
 //     },
 //     async ({ tokens, profile, context, request }) => {
 //       // here you can use the params above to get the user and return it
 //       // what you do inside this and how you find the user is up to you
 //       return await getUser(tokens, profile, context, request);
-//     },
+//     }
 //   ),
 //   'oauth-google'
 // );
