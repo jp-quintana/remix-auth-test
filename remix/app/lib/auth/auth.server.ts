@@ -30,7 +30,6 @@ authenticator.use(
   'user-pass'
 );
 
-// check OAuth2Strategy types
 // authenticator.use(
 //   new OAuth2Strategy<User, { provider: 'provider-name' }, { id_token: string }>(
 //     {
