@@ -46,8 +46,6 @@ authenticator.use(
 //       ], // optional
 //     },
 //     async ({ tokens, profile, context, request }) => {
-//       // here you can use the params above to get the user and return it
-//       // what you do inside this and how you find the user is up to you
 //       return await getUser(tokens, profile, context, request);
 //     }
 //   ),
