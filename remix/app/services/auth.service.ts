@@ -97,7 +97,6 @@ export const refreshTokens = async (
 
   console.log({ payload });
 
-  // TODO: check future
   if (typeof window === 'undefined') {
     let refreshToken = '';
     const cookies = response.headers.get('Set-Cookie')!.split(';');
