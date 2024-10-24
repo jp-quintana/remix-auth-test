@@ -2,7 +2,7 @@ import { Authenticator } from 'remix-auth';
 import { sessionStorage } from '~/lib/auth/session.server';
 import { FormStrategy } from 'remix-auth-form';
 import { login } from '~/services/auth.service';
-// import { OAuth2Strategy } from 'remix-auth-oauth2';
+// import { GoogleStrategy as gs } from 'remix-auth-google';
 
 export interface User {
   accessToken: string;
@@ -17,37 +17,26 @@ export interface User {
   };
 }
 
-export const authenticator = new Authenticator<User>(sessionStorage);
+const formStrategy = new FormStrategy(async ({ form }) => {
+  const email = form.get('email') as string;
+  const password = form.get('password') as string;
 
-authenticator.use(
-  new FormStrategy(async ({ form }) => {
-    const email = form.get('email') as string;
-    const password = form.get('password') as string;
+  const user = await login(email, password);
+  return user;
+});
 
-    const user = await login(email, password);
-    return user;
-  }),
-  'user-pass'
-);
-
-// authenticator.use(
-//   new OAuth2Strategy<User, { provider: 'provider-name' }, { id_token: string }>(
-//     {
-//       clientId: process.env.GOOGLE_CLIENT_ID as string,
-//       clientSecret: process.env.GOOGLE_SECRET as string,
-
-//       authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
-//       tokenEndpoint: 'https://oauth2.googleapis.com/token',
-//       redirectURI: process.env.GOOGLE_OAUTH_REDIRECT_URL as string,
-
-//       scopes: [
-//         'https://www.googleapis.com/auth/userinfo.profile',
-//         'https://www.googleapis.com/auth/userinfo.email',
-//       ], // optional
-//     },
-//     async ({ tokens, profile, context, request }) => {
-//       return await getUser(tokens, profile, context, request);
-//     }
-//   ),
-//   'oauth-google'
+// const googleStrategy = new gs(
+//   {
+//     clientID: 'YOUR_CLIENT_ID',
+//     clientSecret: 'YOUR_CLIENT_SECRET',
+//     callbackURL: 'https://example.com/auth/google/callback',
+//   },
+//   async ({ accessToken, refreshToken, extraParams, profile }) => {
+//     // Get the user data from your DB or API using the tokens and profile
+//     return User.findOrCreate({ email: profile.emails[0].value });
+//   }
 // );
+
+export const authenticator = new Authenticator<User>(sessionStorage);
+authenticator.use(formStrategy, 'user-pass');
+// authenticator.use(googleStrategy, 'google-auth');
