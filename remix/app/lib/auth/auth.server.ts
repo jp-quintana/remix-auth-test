@@ -27,9 +27,9 @@ const formStrategy = new FormStrategy(async ({ form }) => {
 
 // const googleStrategy = new gs(
 //   {
-//     clientID: 'YOUR_CLIENT_ID',
-//     clientSecret: 'YOUR_CLIENT_SECRET',
-//     callbackURL: 'https://example.com/auth/google/callback',
+//     clientID: '',
+//     clientSecret: '',
+//     callbackURL: '',
 //   },
 //   async ({ accessToken, refreshToken, extraParams, profile }) => {
 //     // Get the user data from your DB or API using the tokens and profile
@@ -37,6 +37,6 @@ const formStrategy = new FormStrategy(async ({ form }) => {
 //   }
 // );
 
-export const authenticator = new Authenticator<User>(sessionStorage);
-authenticator.use(formStrategy, 'user-pass');
-// authenticator.use(googleStrategy, 'google-auth');
+// export const authenticator = new Authenticator<User>(sessionStorage);
+// authenticator.use(formStrategy, 'user-pass');
+// // authenticator.use(googleStrategy, 'google-auth');
