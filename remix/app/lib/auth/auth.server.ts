@@ -2,7 +2,7 @@ import { Authenticator } from 'remix-auth';
 import { sessionStorage } from '~/lib/auth/session.server';
 import { FormStrategy } from 'remix-auth-form';
 import { login } from '~/services/auth.service';
-// import { GoogleStrategy as gs } from 'remix-auth-google';
+import { GoogleStrategy as gs } from 'remix-auth-google';
 
 export interface User {
   accessToken: string;
@@ -25,18 +25,18 @@ const formStrategy = new FormStrategy(async ({ form }) => {
   return user;
 });
 
-// const googleStrategy = new gs(
-//   {
-//     clientID: '',
-//     clientSecret: '',
-//     callbackURL: '',
-//   },
-//   async ({ accessToken, refreshToken, extraParams, profile }) => {
-//     // Get the user data from your DB or API using the tokens and profile
-//     return User.findOrCreate({ email: profile.emails[0].value });
-//   }
-// );
+const googleStrategy = new gs(
+  {
+    clientID: '',
+    clientSecret: '',
+    callbackURL: '',
+  },
+  async ({ accessToken, refreshToken, extraParams, profile }) => {
+    const user = await login(profile.emails[0].value, 'placeholder');
+    return user;
+  }
+);
 
-// export const authenticator = new Authenticator<User>(sessionStorage);
-// authenticator.use(formStrategy, 'user-pass');
-// // authenticator.use(googleStrategy, 'google-auth');
+export const authenticator = new Authenticator<User>(sessionStorage);
+authenticator.use(formStrategy, 'user-pass');
+authenticator.use(googleStrategy, 'google-auth');
