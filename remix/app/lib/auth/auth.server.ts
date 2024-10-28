@@ -27,9 +27,9 @@ const formStrategy = new FormStrategy(async ({ form }) => {
 
 const googleStrategy = new gs(
   {
-    clientID: '',
-    clientSecret: '',
-    callbackURL: '',
+    clientID: process.env.GOOGLE_CLIENT_ID as string,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    callbackURL: process.env.GOOGLE_OAUTH_REDIRECT_URL as string,
   },
   async ({ accessToken, refreshToken, extraParams, profile }) => {
     const user = await login(profile.emails[0].value, 'placeholder');
