@@ -17,3 +17,7 @@ export const accessTokenTtl = process.env.ACCESS_TOKEN_TTL || '60m';
 export const refreshTokenTtl = process.env.REFRESH_TOKEN_TTL || '90d';
 export const googleClientId = getEnvVariable('GOOGLE_CLIENT_ID');
 export const googleClientSecret = getEnvVariable('GOOGLE_CLIENT_SECRET');
+export const googleOAuthRedirectUrl = getEnvVariable(
+  'GOOGLE_OAUTH_REDIRECT_URL'
+);
+export const origin = getEnvVariable('ORIGIN');

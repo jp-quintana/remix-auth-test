@@ -1,12 +1,16 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/auth.controller';
+import { UserService } from '../services/user.service';
 
 export class AuthRoutes {
   static getRoutes() {
     const router = Router();
-    router.post('/login', AuthController.login);
-    router.post('/register', AuthController.register);
-    router.post('/refresh', AuthController.refresh);
+    const service = new UserService();
+    const controller = new AuthController(service);
+    router.post('/login', controller.login);
+    router.post('/register', controller.register);
+    router.post('/refresh', controller.refresh);
+    router.get('/sessions/oauth/google', controller.googleOAuthHandler);
     return router;
   }
 }

@@ -17,7 +17,7 @@ export class UserController {
         return res.status(404).json({ message: 'User not found' });
       }
 
-      delete user.password;
+      if (user.password) delete user.password;
 
       return res.status(200).json({ user });
     } catch (error: any) {

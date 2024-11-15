@@ -1,5 +1,5 @@
 import { ActionFunctionArgs } from '@remix-run/node';
-import { Form as RemixForm, useActionData } from '@remix-run/react';
+import { Form, Form as RemixForm, useActionData } from '@remix-run/react';
 import { AuthorizationError } from 'remix-auth';
 import { authenticator } from '~/lib/auth/auth.server';
 
@@ -39,6 +39,9 @@ const Login = () => {
         <button>Sign In</button>
         {data?.error && <p>{data.error}</p>}
       </RemixForm>
+      <Form action="/auth/google" method="post" className="flex justify-center">
+        <button>Login with Google</button>
+      </Form>
     </div>
   );
 };
